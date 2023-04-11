@@ -1,0 +1,4 @@
+[submodule ".engine"]
+	path = .engine
+	url = git@github.com:JarvusInnovations/infra-components.git
+	branch = channels/engine/latest
