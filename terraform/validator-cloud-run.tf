@@ -96,5 +96,6 @@ locals {
     display = "Invoker for gtfs web pub/sub"
   }
   validator_cloud_run_invoker_member = module.validator_cloud_run_invoker.svc_accounts.0.member
+  validator_cloud_run_invoker_email  = module.validator_cloud_run_invoker.svc_accounts.0.email
   validator_cloud_run_svc_revision = var.validator_cloud_run_manage_revision ? var.validator_cloud_run_service.revision : data.google_cloud_run_service.validator_cloud_run_service.0.status.0.latest_created_revision_name
 }
