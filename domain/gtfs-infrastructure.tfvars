@@ -14,3 +14,10 @@ validator_cloud_run_service         = {
   startup_failure_threshold         = 1
 }
 validator_cloud_run_manage_revision = false
+validator_pubsub_topic              = "GTFS-WEB-VALIDATOR"
+validator_pubsub_sub                = {
+  push_endpoint_path         = "/run-validator"
+  message_retention_duration = "86400s"
+  retry_policy_max_backoff   = "600s"
+  retry_policy_min_backoff   = "10s"
+}
