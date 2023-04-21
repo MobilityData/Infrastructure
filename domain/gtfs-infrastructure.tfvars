@@ -13,4 +13,3 @@ validator_cloud_run_service = {
   startup_period_seconds    = 240
   startup_failure_threshold = 1
 }
-validator_cloud_run_invoker = "invoker-gtfs-web"
