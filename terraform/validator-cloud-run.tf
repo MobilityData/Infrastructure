@@ -31,8 +31,6 @@ resource "google_cloud_run_service_iam_member" "validator_cloud_run_invoker" {
 resource "google_cloud_run_v2_service" "validator_cloud_run_service" {
   name           = var.validator_cloud_run_service.name
   location       = var.validator_cloud_run_service.location
-  client         = "gcloud"
-  client_version = "426.0.0"
   annotations    = {
     "client.knative.dev/user-image" = var.validator_cloud_run_service.image
   }
