@@ -1,5 +1,33 @@
 # GTFS Infrastructure
 
+## Quick Start
+
+### terraform
+
+Relevant paths include:
+
+- `domain/gtfs-infrastructure.tfvars`: manage infrastructure configuration (definitions)
+- `terraform/*`: manage infrastructure implementation
+
+To test changes:
+
+```bash
+make -C pipelines/iac ci
+```
+
+To apply changes:
+
+```bash
+make -C pipelines/iac cd
+```
+
+Re-init terraform (required when, e.g., new or renamed module, new provider, etc):
+
+```bash
+rm -r terraform/.terraform
+make -C pipelines/iac ci
+```
+
 ## One-Time Setup
 
 These steps must be performed once at creation time of the project
