@@ -41,6 +41,13 @@ resource "google_pubsub_subscription" "validator_pubsub_sub" {
   }
 }
 
+resource "google_storage_notification" "validator_pubsub_pub" {
+  bucket         = local.validator_storage_uploads_bucket_state.name
+  payload_format = "JSON_API_V1"
+  topic          = google_pubsub_topic.validator_pubsub_topic.name
+  event_types    = [ "OBJECT_FINALIZE" ]
+}
+
 resource "google_project_iam_member" "validator_pubsub_iam_binding" {
   project    = data.google_project.this.id
   member     = local.validator_pubsub_binding_member
