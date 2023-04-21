@@ -12,6 +12,7 @@ variable "validator_cloud_run_service" {
       startup_timeout_seconds   = optional(number, null)
       startup_period_seconds    = optional(number, null)
       startup_failure_threshold = optional(number, null)
+      revision                  = optional(string, null)
   })
 }
 
@@ -19,6 +20,12 @@ module "validator_cloud_run_invoker" {
   source               = "./gcp-iam"
   project_name         = basename(data.google_project.this.id)
   svc_accounts         = [ local.validator_cloud_run_invoker ]
+}
+
+variable "validator_cloud_run_manage_revision" {
+  type        = bool
+  default     = true
+  description = "Revision is queried from data source when false"
 }
 
 resource "google_cloud_run_service_iam_member" "validator_cloud_run_invoker" {
@@ -37,7 +44,7 @@ resource "google_cloud_run_v2_service" "validator_cloud_run_service" {
 
   template {
 
-    revision    = "gtfs-validator-web-00058-gew"
+    revision    = local.validator_cloud_run_svc_revision
     annotations = {
       "client.knative.dev/user-image" = var.validator_cloud_run_service.image
     }
@@ -77,10 +84,17 @@ resource "google_cloud_run_v2_service" "validator_cloud_run_service" {
   }
 }
 
+data "google_cloud_run_service" "validator_cloud_run_service" {
+  count          = var.validator_cloud_run_manage_revision ? 0 : 1
+  name           = var.validator_cloud_run_service.name
+  location       = var.validator_cloud_run_service.location
+}
+
 locals {
   validator_cloud_run_invoker = {
     name    = "invoker-gtfs-web"
     display = "Invoker for gtfs web pub/sub"
   }
   validator_cloud_run_invoker_member = module.validator_cloud_run_invoker.svc_accounts.0.member
+  validator_cloud_run_svc_revision = var.validator_cloud_run_manage_revision ? var.validator_cloud_run_service.revision : data.google_cloud_run_service.validator_cloud_run_service.0.status.0.latest_created_revision_name
 }
