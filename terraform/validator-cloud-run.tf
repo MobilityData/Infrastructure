@@ -15,9 +15,10 @@ variable "validator_cloud_run_service" {
   })
 }
 
-variable "validator_cloud_run_invoker" {
-  type        = string
-  description = "Name of service account to grant invoker privilege on the validator cloud run service"
+module "validator_cloud_run_invoker" {
+  source               = "./gcp-iam"
+  project_name         = basename(data.google_project.this.id)
+  svc_accounts         = [ local.validator_cloud_run_invoker ]
 }
 
 resource "google_cloud_run_service_iam_member" "validator_cloud_run_invoker" {
@@ -79,8 +80,9 @@ resource "google_cloud_run_v2_service" "validator_cloud_run_service" {
 }
 
 locals {
-  validator_cloud_run_invoker_member = module.gcp_svc_account.svc_accounts[index(
-    [ for acct in module.gcp_svc_account.svc_accounts: split("@", acct.email)[0] ],
-    var.validator_cloud_run_invoker
-  )].member
+  validator_cloud_run_invoker = {
+    name    = "invoker-gtfs-web"
+    display = "Invoker for gtfs web pub/sub"
+  }
+  validator_cloud_run_invoker_member = module.validator_cloud_run_invoker.svc_accounts.0.member
 }
