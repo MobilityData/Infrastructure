@@ -6,7 +6,7 @@
 
 Relevant paths include:
 
-- `domain/gtfs-infrastructure.tfvars`: manage infrastructure configuration (definitions)
+- `environments/prd/prd.tfvars`: manage production configuration
 - `terraform/*`: manage infrastructure implementation
 
 To test changes:

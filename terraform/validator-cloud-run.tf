@@ -5,6 +5,7 @@ variable "validator_cloud_run_service" {
       name                      = string
       location                  = string
       image                     = string
+      invoker_account_name      = string
       max_instance_count        = optional(number, null)
       container_port            = optional(number, 8080)
       limit_cpu                 = optional(string, null)
@@ -92,7 +93,7 @@ data "google_cloud_run_service" "validator_cloud_run_service" {
 
 locals {
   validator_cloud_run_invoker = {
-    name    = "invoker-gtfs-web"
+    name    = var.validator_cloud_run_service.invoker_account_name
     display = "Invoker for gtfs web pub/sub"
   }
   validator_cloud_run_invoker_member = module.validator_cloud_run_invoker.svc_accounts.0.member

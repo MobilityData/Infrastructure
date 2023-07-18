@@ -5,6 +5,7 @@ validator_cloud_run_service           = {
   name                              = "gtfs-validator-web"
   location                          = "us-east1"
   image                             = "gcr.io/web-based-gtfs-validator/gtfs-validator-web"
+  invoker_account_name              = "invoker-gtfs-web"
   max_instance_count                = 10
   container_port                    = 8080
   limit_cpu                         = "4000m"

@@ -5,7 +5,7 @@ on:
     branches:
       - 'main'
     paths:
-      - 'domain/gtfs-infrastructure.tfvars'
+      - 'environments/**'
       - 'terraform/**'
       - 'pipelines/iac/**.conf'
       - '.github/workflows/iac-pr.yml'
