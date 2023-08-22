@@ -1,14 +1,15 @@
-name: Validate IAC changes
+name: Validate staging IAC changes
 
 on:
   pull_request:
     branches:
-      - 'main'
+      - 'staging'
     paths:
-      - 'environments/**'
+      - 'environments/stg/**'
       - 'terraform/**'
-      - 'pipelines/iac/**.conf'
-      - '.github/workflows/iac-pr.yml'
+      - 'pipelines/iac/common.conf'
+      - 'pipelines/iac/stg.conf'
+      - '.github/workflows/iac-stg-pr.yml'
 
 jobs:
 
@@ -16,7 +17,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      ENGINE_ENV       : github-pr
+      ENGINE_ENV       : stg-github-pr
       GH_PR_NUMBER     : ${{ github.event.number  }}
       GITHUB_TOKEN     : ${{ secrets.GITHUB_TOKEN }}
     steps:

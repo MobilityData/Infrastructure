@@ -1,14 +1,15 @@
-name: Deploy IAC changes
+name: Deploy production IAC changes
 
 on:
   push:
     branches:
       - 'main'
     paths:
-      - 'environments/**'
+      - 'environments/prd/**'
       - 'terraform/**'
-      - 'pipelines/iac/**.conf'
-      - '.github/workflows/iac-push.yml'
+      - 'pipelines/iac/common.conf'
+      - 'pipelines/iac/prd.conf'
+      - '.github/workflows/iac-prd-push.yml'
 
 jobs:
 
