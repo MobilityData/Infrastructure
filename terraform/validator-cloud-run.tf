@@ -36,6 +36,13 @@ resource "google_cloud_run_service_iam_member" "validator_cloud_run_invoker" {
   member   = local.validator_cloud_run_invoker_member
 }
 
+resource "google_cloud_run_service_iam_member" "validator_cloud_run_public" {
+  location = var.validator_cloud_run_service.location
+  service  = google_cloud_run_v2_service.validator_cloud_run_service.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
+
 resource "google_cloud_run_v2_service" "validator_cloud_run_service" {
   name           = var.validator_cloud_run_service.name
   location       = var.validator_cloud_run_service.location
