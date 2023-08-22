@@ -65,6 +65,21 @@ resource "google_cloud_run_v2_service" "validator_cloud_run_service" {
 
       image = var.validator_cloud_run_service.image
 
+      env {
+        name  = "USER_UPLOAD_BUCKET_NAME"
+        value = var.validator_storage_uploads_bucket_name
+      }
+
+      env {
+        name  = "JOB_INFO_BUCKET_NAME"
+        value = var.validator_storage_reports_bucket_name
+      }
+
+      env {
+        name  = "RESULTS_BUCKET_NAME"
+        value = var.validator_storage_reports_bucket_name
+      }
+
       ports {
         name = "http1"
         container_port = var.validator_cloud_run_service.container_port
