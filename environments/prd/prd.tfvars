@@ -1,6 +1,7 @@
 # vim: set syntax=tf:
 project_name                          = "web-based-gtfs-validator"
 project_region                        = "us-east1"
+project_gcs_service_agent_account     = "service-1084949198173@gs-project-accounts.iam.gserviceaccount.com"
 validator_cloud_run_service           = {
   name                              = "gtfs-validator-web"
   location                          = "us-east1"
