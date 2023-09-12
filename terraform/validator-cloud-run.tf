@@ -5,6 +5,7 @@ variable "validator_cloud_run_service" {
       name                      = string
       location                  = string
       image                     = string
+      invoker_account_name      = string
       max_instance_count        = optional(number, null)
       container_port            = optional(number, 8080)
       limit_cpu                 = optional(string, null)
@@ -35,6 +36,13 @@ resource "google_cloud_run_service_iam_member" "validator_cloud_run_invoker" {
   member   = local.validator_cloud_run_invoker_member
 }
 
+resource "google_cloud_run_service_iam_member" "validator_cloud_run_public" {
+  location = var.validator_cloud_run_service.location
+  service  = google_cloud_run_v2_service.validator_cloud_run_service.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
+
 resource "google_cloud_run_v2_service" "validator_cloud_run_service" {
   name           = var.validator_cloud_run_service.name
   location       = var.validator_cloud_run_service.location
@@ -56,6 +64,21 @@ resource "google_cloud_run_v2_service" "validator_cloud_run_service" {
     containers {
 
       image = var.validator_cloud_run_service.image
+
+      env {
+        name  = "USER_UPLOAD_BUCKET_NAME"
+        value = var.validator_storage_uploads_bucket_name
+      }
+
+      env {
+        name  = "JOB_INFO_BUCKET_NAME"
+        value = var.validator_storage_reports_bucket_name
+      }
+
+      env {
+        name  = "RESULTS_BUCKET_NAME"
+        value = var.validator_storage_reports_bucket_name
+      }
 
       ports {
         name = "http1"
@@ -92,7 +115,7 @@ data "google_cloud_run_service" "validator_cloud_run_service" {
 
 locals {
   validator_cloud_run_invoker = {
-    name    = "invoker-gtfs-web"
+    name    = var.validator_cloud_run_service.invoker_account_name
     display = "Invoker for gtfs web pub/sub"
   }
   validator_cloud_run_invoker_member = module.validator_cloud_run_invoker.svc_accounts.0.member

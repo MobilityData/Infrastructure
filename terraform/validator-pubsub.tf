@@ -22,6 +22,12 @@ resource "google_pubsub_topic" "validator_pubsub_topic" {
   name  = var.validator_pubsub_topic
 }
 
+resource "google_pubsub_topic_iam_member" "validator_pubsub_topic_pub" {
+  topic  = google_pubsub_topic.validator_pubsub_topic.name
+  role   = "roles/pubsub.publisher"
+  member = local.project_gcs_service_agent_member
+}
+
 resource "google_pubsub_subscription" "validator_pubsub_sub" {
   name                       = local.validator_pubsub_sub_name
   topic                      = google_pubsub_topic.validator_pubsub_topic.name
@@ -46,6 +52,7 @@ resource "google_storage_notification" "validator_pubsub_pub" {
   payload_format = "JSON_API_V1"
   topic          = google_pubsub_topic.validator_pubsub_topic.name
   event_types    = [ "OBJECT_FINALIZE" ]
+  depends_on = [ google_pubsub_topic_iam_member.validator_pubsub_topic_pub ]
 }
 
 resource "google_project_iam_member" "validator_pubsub_iam_binding" {

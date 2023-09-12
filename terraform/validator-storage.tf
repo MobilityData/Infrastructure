@@ -21,6 +21,18 @@ module "validator_storage" {
   ]
 }
 
+resource "google_storage_bucket_access_control" "client_bucket_access" {
+  bucket = local.validator_storage_client_bucket_state.name
+  role   = "READER"
+  entity = "allUsers"
+}
+
+resource "google_storage_bucket_access_control" "reports_bucket_access" {
+  bucket = local.validator_storage_reports_bucket_state.name
+  role   = "READER"
+  entity = "allUsers"
+}
+
 locals {
   validator_storage_uploads_bucket = {
     name          = var.validator_storage_uploads_bucket_name
