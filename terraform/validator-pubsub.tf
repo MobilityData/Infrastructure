@@ -46,7 +46,7 @@ resource "google_pubsub_subscription" "validator_pubsub_sub" {
     minimum_backoff = var.validator_pubsub_sub.retry_policy_min_backoff
   }
   expiration_policy {
-    # Set expiration policy to never expired.
+    # Set expiration policy to never expire.
     # Official documentation:
     # https://cloud.google.com/pubsub/docs/reference/rest/v1/projects.subscriptions#ExpirationPolicy
     # 
