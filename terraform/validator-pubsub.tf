@@ -45,6 +45,18 @@ resource "google_pubsub_subscription" "validator_pubsub_sub" {
     maximum_backoff = var.validator_pubsub_sub.retry_policy_max_backoff
     minimum_backoff = var.validator_pubsub_sub.retry_policy_min_backoff
   }
+  expiration_policy {
+    # Set expiration policy to never expired.
+    # Official documentation:
+    # https://cloud.google.com/pubsub/docs/reference/rest/v1/projects.subscriptions#ExpirationPolicy
+    # 
+    # A subscription is considered active as long as any connected subscriber
+    # is successfully consuming messages from the subscription or is issuing operations on the subscription. 
+    # If expirationPolicy is not set, a default policy with ttl of 31 days will be used. 
+    # If it is set but ttl is "", the resource never expires.
+    # ....
+    ttl = ""
+  }
 }
 
 resource "google_storage_notification" "validator_pubsub_pub" {
