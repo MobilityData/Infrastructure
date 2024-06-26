@@ -13,7 +13,6 @@ variable "validator_cloud_run_service" {
       startup_timeout_seconds   = optional(number, null)
       startup_period_seconds    = optional(number, null)
       startup_failure_threshold = optional(number, null)
-      revision                  = optional(string, null)
   })
 }
 
@@ -46,16 +45,9 @@ resource "google_cloud_run_service_iam_member" "validator_cloud_run_public" {
 resource "google_cloud_run_v2_service" "validator_cloud_run_service" {
   name           = var.validator_cloud_run_service.name
   location       = var.validator_cloud_run_service.location
-  annotations    = {
-    "client.knative.dev/user-image" = var.validator_cloud_run_service.image
-  }
+  client                  = "cloud-console"
 
   template {
-
-    revision    = local.validator_cloud_run_svc_revision
-    annotations = {
-      "client.knative.dev/user-image" = var.validator_cloud_run_service.image
-    }
 
     scaling {
       max_instance_count = var.validator_cloud_run_service.max_instance_count
@@ -64,7 +56,7 @@ resource "google_cloud_run_v2_service" "validator_cloud_run_service" {
     containers {
 
       image = var.validator_cloud_run_service.image
-
+      name = "stg-gtfs-validator-web-1"
       env {
         name  = "USER_UPLOAD_BUCKET_NAME"
         value = var.validator_storage_uploads_bucket_name
@@ -120,5 +112,4 @@ locals {
   }
   validator_cloud_run_invoker_member = module.validator_cloud_run_invoker.svc_accounts.0.member
   validator_cloud_run_invoker_email  = module.validator_cloud_run_invoker.svc_accounts.0.email
-  validator_cloud_run_svc_revision = var.validator_cloud_run_manage_revision ? var.validator_cloud_run_service.revision : data.google_cloud_run_service.validator_cloud_run_service.0.status.0.latest_created_revision_name
 }
